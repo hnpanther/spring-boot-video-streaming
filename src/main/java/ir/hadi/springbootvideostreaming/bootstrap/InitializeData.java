@@ -7,8 +7,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-
 @Component
 public class InitializeData implements ApplicationListener<ContextRefreshedEvent> {
 
