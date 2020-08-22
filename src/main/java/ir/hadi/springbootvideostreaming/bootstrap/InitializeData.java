@@ -41,5 +41,7 @@ public class InitializeData implements ApplicationListener<ContextRefreshedEvent
         this.videoFileRepository.save(videoFile1);
         this.videoFileRepository.save(videoFile2);
         this.videoFileRepository.save(videoFile3);
+
+        this.initialized = true;
     };
 }
