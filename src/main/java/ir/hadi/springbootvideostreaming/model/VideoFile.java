@@ -1,6 +1,8 @@
 package ir.hadi.springbootvideostreaming.model;
 
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -13,18 +15,20 @@ public class VideoFile {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "file_name")
+    // unique in @Column only used in create table by jpa
+    @Column(name = "file_name", unique = true)
     private String fileName;
 
     @Column(name = "dir_path")
     private String dirPath;
 
-    @Column(name = "file_path")
+    @Column(name = "file_size")
     private double fileSize;
 
     @Column(name = "description")
     private String description;
 
+    @CreationTimestamp
     @Column(name = "added_date")
     private LocalDateTime addedDate;
 

@@ -12,8 +12,11 @@ public class InitializeData implements ApplicationListener<ContextRefreshedEvent
 
     private boolean initialized = false;
 
-    @Autowired
     private VideoFileRepository videoFileRepository;
+
+    public InitializeData(@Autowired VideoFileRepository videoFileRepository) {
+        this.videoFileRepository = videoFileRepository;
+    }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
