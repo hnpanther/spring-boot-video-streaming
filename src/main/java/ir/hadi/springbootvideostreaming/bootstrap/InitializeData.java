@@ -3,12 +3,13 @@ package ir.hadi.springbootvideostreaming.bootstrap;
 import ir.hadi.springbootvideostreaming.model.VideoFile;
 import ir.hadi.springbootvideostreaming.repository.VideoFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InitializeData implements ApplicationListener<ContextRefreshedEvent> {
+public class InitializeData implements CommandLineRunner {
 
     private boolean initialized = false;
 
@@ -19,7 +20,7 @@ public class InitializeData implements ApplicationListener<ContextRefreshedEvent
     }
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+    public void run(String... args) throws Exception {
         if(!this.initialized) {
             initData();
         }
