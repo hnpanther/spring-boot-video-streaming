@@ -23,11 +23,11 @@ public class VideoFileController {
         return "video";
     }
 
-    @GetMapping("/stream")
+    @GetMapping("/stream/file-system-resource")
     @ResponseBody
     public FileSystemResource streamVideo() {
         // create folder file-system-resource in root of project
-        return new FileSystemResource("file-system-resource/test1.mp4");
+        return new FileSystemResource("local_storage/video/test3.mp4");
     }
 
 

@@ -13,7 +13,7 @@ import java.io.IOException;
 public class StoreConfig {
 
     public File fileSystemRoot() throws IOException {
-        return new File("C:/media_store");
+        return new File("local_storage/video");
     }
 
     @Bean

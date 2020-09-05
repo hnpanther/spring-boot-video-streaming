@@ -144,4 +144,5 @@ Desktop.ini
 # Customize
 HELP.md
 *.mp4
+local_storage/*
 ######################
