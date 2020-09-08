@@ -1,13 +1,11 @@
 package ir.hadi.springbootvideostreaming.exception;
 
 import org.apache.catalina.connector.ClientAbortException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice
+//@ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value = ClientAbortException.class)
+//    @ExceptionHandler(value = ClientAbortException.class)
     public void handleClientAbortException(ClientAbortException e) {
         System.out.println("=========================================================================");
         System.out.println("Exception Here - ClientAbortException");
