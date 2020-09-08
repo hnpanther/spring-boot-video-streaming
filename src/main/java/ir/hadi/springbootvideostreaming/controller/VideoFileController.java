@@ -1,30 +1,43 @@
 package ir.hadi.springbootvideostreaming.controller;
 
+import ir.hadi.springbootvideostreaming.config.VideoStore;
+import ir.hadi.springbootvideostreaming.model.VideoFile;
+import ir.hadi.springbootvideostreaming.repository.VideoFileRepository;
 import ir.hadi.springbootvideostreaming.service.VideoFileService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/video")
 public class VideoFileController {
 
     private VideoFileService videoFileService;
+    private VideoFileRepository videoFileRepository;
+    private VideoStore videoStores;
 
-    public VideoFileController(@Autowired  VideoFileService videoFileService) {
+    public VideoFileController(VideoFileService videoFileService, VideoFileRepository videoFileRepository, VideoStore videoStores) {
         this.videoFileService = videoFileService;
+        this.videoFileRepository = videoFileRepository;
+        this.videoStores = videoStores;
+    }
+
+    @GetMapping({"/","index.html,"})
+    public String indexPage() {
+        return "index";
     }
 
     @GetMapping("/player")
@@ -59,6 +72,42 @@ public class VideoFileController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }
+
+    @PostMapping("/files")
+    @ResponseBody
+    public ResponseEntity<?> setContent(@RequestParam("file") MultipartFile file)
+            throws IOException {
+
+        VideoFile vf = new VideoFile();
+        vf.setFileName(file.getOriginalFilename());
+        vf.setMimeType(file.getContentType());
+        VideoFile savedFile = videoFileRepository.save(vf);
+
+        videoStores.setContent(savedFile, file.getInputStream());
+        videoFileRepository.save(savedFile);
+
+
+        return null;
+    }
+
+    @GetMapping("/files/{fileId}")
+    @ResponseBody
+    public ResponseEntity<?> getContent(@PathVariable("fileId") Long id) {
+
+        Optional<VideoFile> f = videoFileRepository.findById(id);
+        if (f.isPresent()) {
+            InputStreamResource inputStreamResource = new InputStreamResource(videoStores.getContent(f.get()));
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentLength(f.get().getContentLength());
+            headers.set("Content-Type", f.get().getMimeType());
+            return new ResponseEntity<Object>(inputStreamResource, headers, HttpStatus.OK);
+        }
+        return null;
+    }
+
+
+
+
 
 
 

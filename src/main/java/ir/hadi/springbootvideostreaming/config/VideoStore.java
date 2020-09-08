@@ -1,8 +1,8 @@
 package ir.hadi.springbootvideostreaming.config;
 
-import org.springframework.content.commons.repository.Store;
-import org.springframework.content.rest.StoreRestResource;
+import ir.hadi.springbootvideostreaming.model.VideoFile;
+import org.springframework.content.commons.repository.ContentStore;
 
-@StoreRestResource(path="videosrc")
-public interface VideoStore extends Store<String> {
+
+public interface VideoStore extends ContentStore<VideoFile, String> {
 }

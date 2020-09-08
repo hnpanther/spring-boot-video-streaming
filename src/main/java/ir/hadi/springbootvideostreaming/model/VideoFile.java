@@ -2,6 +2,9 @@ package ir.hadi.springbootvideostreaming.model;
 
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.content.commons.annotations.ContentId;
+import org.springframework.content.commons.annotations.ContentLength;
+import org.springframework.content.commons.annotations.MimeType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -31,6 +34,13 @@ public class VideoFile {
     @CreationTimestamp
     @Column(name = "added_date")
     private LocalDateTime addedDate;
+
+    @ContentId
+    private String contentId;
+    @ContentLength
+    private long contentLength;
+    @MimeType
+    private String mimeType;
 
     public VideoFile() {}
 
@@ -82,6 +92,30 @@ public class VideoFile {
         this.addedDate = addedDate;
     }
 
+    public String getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
+    }
+
+    public long getContentLength() {
+        return contentLength;
+    }
+
+    public void setContentLength(long contentLength) {
+        this.contentLength = contentLength;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
     @Override
     public String toString() {
         return "VideoFile{" +
@@ -91,6 +125,9 @@ public class VideoFile {
                 ", fileSize=" + fileSize +
                 ", description='" + description + '\'' +
                 ", addedDate=" + addedDate +
+                ", contentId='" + contentId + '\'' +
+                ", contentLength=" + contentLength +
+                ", mimeType='" + mimeType + '\'' +
                 '}';
     }
 }
