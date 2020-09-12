@@ -1,6 +1,6 @@
 package ir.hadi.springbootvideostreaming.controller;
 
-import ir.hadi.springbootvideostreaming.config.VideoStore;
+import ir.hadi.springbootvideostreaming.config.VideoContentStore;
 import ir.hadi.springbootvideostreaming.model.VideoFile;
 import ir.hadi.springbootvideostreaming.repository.VideoFileRepository;
 import ir.hadi.springbootvideostreaming.service.VideoFileService;
@@ -19,6 +19,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @Controller
@@ -27,12 +30,12 @@ public class VideoFileController {
 
     private VideoFileService videoFileService;
     private VideoFileRepository videoFileRepository;
-    private VideoStore videoStores;
+    private VideoContentStore videoContentStores;
 
-    public VideoFileController(VideoFileService videoFileService, VideoFileRepository videoFileRepository, VideoStore videoStores) {
+    public VideoFileController(VideoFileService videoFileService, VideoFileRepository videoFileRepository, VideoContentStore videoContentStores) {
         this.videoFileService = videoFileService;
         this.videoFileRepository = videoFileRepository;
-        this.videoStores = videoStores;
+        this.videoContentStores = videoContentStores;
     }
 
     @GetMapping({"/","index.html,"})
@@ -49,14 +52,29 @@ public class VideoFileController {
     @ResponseBody
     public FileSystemResource streamVideo() {
         // create folder file-system-resource in root of project
-        return new FileSystemResource("local_storage/video/test3.mp4");
+        return new FileSystemResource("local_storage/video/zxc.mp4");
+    }
+
+    @PostMapping("/upload")
+    @ResponseBody
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        System.out.println("test");
+        String UPLOAD_DIR = "local_storage/video";
+
+        // create a path from file name
+        Path path = Paths.get(UPLOAD_DIR, file.getOriginalFilename());
+
+        // save the file to `UPLOAD_DIR`
+        // make sure you have permission to write
+        Files.write(path, file.getBytes());
+        return null;
     }
 
     @GetMapping("stream/download")
     @ResponseBody
     public ResponseEntity<Resource> downloadVideo() throws FileNotFoundException {
 
-        File file = new File("local_storage/video/test3.mp4");
+        File file = new File("local_storage/video/zxc.mp4");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
         headers.add("Pragma", "no-cache");
@@ -82,9 +100,12 @@ public class VideoFileController {
         vf.setFileName(file.getOriginalFilename());
         vf.setMimeType(file.getContentType());
         VideoFile savedFile = videoFileRepository.save(vf);
+        System.out.println(savedFile.toString());
 
-        videoStores.setContent(savedFile, file.getInputStream());
+        savedFile.setContentId(file.getOriginalFilename());
+        videoContentStores.setContent(savedFile, file.getInputStream());
         videoFileRepository.save(savedFile);
+        System.out.println("=======\n"+ savedFile.toString());
 
 
         return null;
@@ -96,7 +117,7 @@ public class VideoFileController {
 
         Optional<VideoFile> f = videoFileRepository.findById(id);
         if (f.isPresent()) {
-            InputStreamResource inputStreamResource = new InputStreamResource(videoStores.getContent(f.get()));
+            InputStreamResource inputStreamResource = new InputStreamResource(videoContentStores.getContent(f.get()));
             HttpHeaders headers = new HttpHeaders();
             headers.setContentLength(f.get().getContentLength());
             headers.set("Content-Type", f.get().getMimeType());

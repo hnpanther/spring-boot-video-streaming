@@ -4,15 +4,15 @@ angular.module('filesApp', [])
         filesList.files = [];
 
         filesList.getFilesList = function() {
-            $http.get('/video/files/').
-            success(function(data, status, headers, config) {
-                if (data._embedded != undefined) {
-                    filesList.files = [];
-                    angular.forEach(data._embedded.files, function(file) {
-                        filesList.files.push(file);
-                    });
-                }
-            });
+            // $http.get('/video/files/').
+            // success(function(data, status, headers, config) {
+            //     if (data._embedded != undefined) {
+            //         filesList.files = [];
+            //         angular.forEach(data._embedded.files, function(file) {
+            //             filesList.files.push(file);
+            //         });
+            //     }
+            // });
         };
         filesList.getFilesList();
 
@@ -32,7 +32,9 @@ angular.module('filesApp', [])
 
             var config = {headers: {'Content-Type': undefined}};
 
-            var httpPromise = $http.post('/video/files', fd, config);
+            // var httpPromise = $http.post('/video/files', fd, config);
+            var httpPromise = $http.post('/video/upload', fd, config);
+            // var httpPromise = $http.post('/videosrc/1', fd, config);
             // then(function(response) {
             //     var fd = new FormData();
             //     fd.append('file', f);
